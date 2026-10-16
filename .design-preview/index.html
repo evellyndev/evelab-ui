@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Evelab Token Visualizer design exploration" />
+    <title>Token Visualizer — Design exploration</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="preview-bar">
+      <a class="preview-brand" href="#top" aria-label="Evelab design exploration">E<span>·</span></a>
+      <div class="preview-caption">Token Visualizer / design exploration</div>
+      <div class="preview-controls">
+        <div class="locale" aria-label="Idioma">
+          <button class="locale-button is-active" data-locale="pt" type="button" aria-pressed="true">PT</button>
+          <button class="locale-button" data-locale="en" type="button" aria-pressed="false">EN</button>
+        </div>
+      </div>
+    </header>
+
+    <main id="top" class="preview-shell">
+      <section class="choice-intro" aria-labelledby="preview-title">
+        <p>Três composições para o mesmo experimento</p>
+        <h1 id="preview-title">Token Visualizer</h1>
+        <span>Contexto → tokens gerados → distribuição de candidatos</span>
+      </section>
+
+      <nav class="concept-tabs" aria-label="Opções de tela">
+        <button class="concept-tab is-active" data-concept="rail" type="button"><b>01</b><span>Observation rail</span><small>Controle e campo</small></button>
+        <button class="concept-tab" data-concept="ledger" type="button"><b>02</b><span>Sequence ledger</span><small>Leitura de sequência</small></button>
+        <button class="concept-tab" data-concept="atlas" type="button"><b>03</b><span>Probability atlas</span><small>Distribuição comparada</small></button>
+      </nav>
+
+      <section class="workbench" data-concept-view="rail" aria-labelledby="workbench-title">
+        <header class="workspace-header">
+          <div>
+            <a class="back-link" href="#top">← <span data-copy="back">Experimentos</span></a>
+            <h2 id="workbench-title" data-copy="title">Visualizador de tokens</h2>
+          </div>
+          <p class="status"><i></i><span data-copy="local">Prévia local — sem modelo conectado</span></p>
+        </header>
+
+        <div class="workspace-grid">
+          <aside class="control-rail" aria-label="Contexto do experimento">
+            <div class="rail-section">
+              <p class="section-label" data-copy="contextLabel">Contexto</p>
+              <label for="prompt" data-copy="promptLabel">Texto de entrada</label>
+              <textarea id="prompt" rows="5" data-copy-placeholder="promptPlaceholder">The conference hall is where</textarea>
+              <div class="tokenized-context" aria-label="Contexto tokenizado">
+                <span class="token-id">2054</span><span>The</span>
+                <span class="token-id">4831</span><span>␠conference</span>
+                <span class="token-id">3950</span><span>␠hall</span>
+                <span class="token-id">374</span><span>␠is</span>
+                <span class="token-id">1405</span><span>␠where</span>
+              </div>
+            </div>
+            <div class="rail-section rail-note">
+              <p class="section-label" data-copy="methodLabel">Leitura</p>
+              <p data-copy="method">Selecione um token da resposta para comparar as alternativas consideradas naquele passo.</p>
+            </div>
+            <button id="run-button" class="run-button" type="button"><span data-copy="run">Atualizar prévia</span><b>↻</b></button>
+          </aside>
+
+          <section class="observation-field" aria-label="Visualização de tokens">
+            <div class="observation-heading">
+              <div><p class="section-label" data-copy="responseLabel">Resposta prevista</p><h3 data-copy="responseTitle">Uma palavra, construída em etapas</h3></div>
+              <p class="step-count"><span id="selected-step">01</span> / 06</p>
+            </div>
+
+            <div class="token-stage" id="token-stage" aria-label="Tokens da resposta">
+              <button class="response-token probability-high is-selected" data-index="0" type="button"><span>␠the</span><small>91%</small></button>
+              <button class="response-token probability-medium" data-index="1" type="button"><span>␠main</span><small>67%</small></button>
+              <button class="response-token probability-high" data-index="2" type="button"><span>␠stage</span><small>84%</small></button>
+              <button class="response-token probability-low" data-index="3" type="button"><span>␠for</span><small>42%</small></button>
+              <button class="response-token probability-high" data-index="4" type="button"><span>␠ideas</span><small>79%</small></button>
+              <button class="response-token probability-medium" data-index="5" type="button"><span>.</span><small>63%</small></button>
+            </div>
+
+            <div class="sequence-track" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+            <div class="selected-readout">
+              <span class="selected-marker">01</span>
+              <p><span data-copy="selected">Token selecionado</span><strong id="selected-token">␠the</strong></p>
+              <p><span data-copy="contextBefore">Contexto antes da escolha</span><code id="context-before">The conference hall is where</code></p>
+            </div>
+          </section>
+
+          <aside class="inspector" aria-label="Candidatos do token selecionado">
+            <div class="inspector-heading"><div><p class="section-label" data-copy="candidatesLabel">Candidatos</p><h3 data-copy="probabilityTitle">Distribuição local</h3></div><span class="top-k">top 5</span></div>
+            <div id="candidate-list" class="candidate-list" role="list"></div>
+            <p class="inspector-note" data-copy="note">A tabela representa os candidatos mais prováveis; a soma não precisa atingir 100%.</p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="concept-notes" aria-label="Notas das opções">
+        <article data-note="rail"><b>01</b><div><h2>Observation rail</h2><p>Melhor para iniciar: contexto permanece estável, leitura ocupa o centro e a distribuição não disputa atenção com o texto.</p></div></article>
+        <article data-note="ledger" hidden><b>02</b><div><h2>Sequence ledger</h2><p>Transforma os tokens em uma trilha de leitura; útil quando o usuário percorre uma resposta longa e precisa voltar a etapas anteriores.</p></div></article>
+        <article data-note="atlas" hidden><b>03</b><div><h2>Probability atlas</h2><p>Amplia a comparação de alternativas. É a opção mais analítica, indicada para estudo aprofundado de incerteza e bifurcações.</p></div></article>
+      </section>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
