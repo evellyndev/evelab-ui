@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { generateTokenVisualization } from './api/tokenVisualizer.js'
+import TextVisualizer from './TextVisualizer.jsx'
+import HallucinationPath from './HallucinationPath.jsx'
 import { experiments } from './data/experiments.js'
 import { locales, useLocale } from './i18n.js'
 import { useRoute } from './router.js'
@@ -35,4 +37,4 @@ function TokenVisualizer({ navigate }) {
 
 function ExperimentPlaceholder({ experiment, navigate }) { const { messages } = useLocale(); const copy = messages.experiments[experiment.slug]; return <main className="placeholder-shell bg-canvas text-content"><PageHeader navigate={navigate} /><section className="placeholder-content" aria-labelledby="experiment-title"><p className="eyebrow">{messages.placeholder.eyebrow}</p><span className="placeholder-index" aria-hidden="true">{experiment.id}</span><h1 id="experiment-title">{copy.title}</h1><div className="construction-rule" aria-hidden="true"><i /></div><p className="placeholder-title" role="status">{messages.placeholder.title}</p><p className="placeholder-copy">{messages.placeholder.body}</p><AppLink className="back-link" href="/" navigate={navigate}>← {messages.placeholder.back}</AppLink></section></main> }
 
-export default function App() { const { route, navigate } = useRoute(); if (route.name === 'experiment') return route.experiment.slug === 'token-visualizer' ? <TokenVisualizer navigate={navigate} /> : <ExperimentPlaceholder experiment={route.experiment} navigate={navigate} />; return <Catalog navigate={navigate} /> }
+export default function App() { const { route, navigate } = useRoute(); const { locale } = useLocale(); if (route.name === 'experiment') return route.experiment.slug === 'token-visualizer' ? <TokenVisualizer navigate={navigate} /> : route.experiment.slug === 'text-visualizer' ? <TextVisualizer locale={locale} navigate={navigate} /> : route.experiment.slug === 'hallucination-path' ? <HallucinationPath locale={locale} navigate={navigate} /> : <ExperimentPlaceholder experiment={route.experiment} navigate={navigate} />; return <Catalog navigate={navigate} /> }
